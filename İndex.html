@@ -1,387 +1,321 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Gelişmiş Filtreleme Sistemi</title>
-  <style>
-    /* Genel düzen */
-    body {
-      margin: 0;
-      min-height: 100vh;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      color: white;
-      background-image: url('https://images.pexels.com/photos/7919/pexels-photo.jpg?auto=compress&cs=tinysrgb&h=750&w=1260');
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 40px 20px;
-      text-shadow: 0 0 8px rgba(0,0,0,0.8);
-    }
-    h2 {
-      margin-bottom: 10px;
-    }
-    select {
-      padding: 8px 12px;
-      font-size: 1rem;
-      border-radius: 5px;
-      border: none;
-      outline: none;
-      margin-bottom: 30px;
-      width: 250px;
-      cursor: pointer;
-      background-color: rgba(0,0,0,0.6);
-      color: white;
-    }
-    select[multiple] {
-      height: 140px; /* artırıldı */
-      width: 260px;
-      background-color: #222; /* koyu arka plan */
-      color: white;           /* yazı beyaz */
-      border-radius: 6px;
-      border: 1px solid #555;
-      padding: 6px;
-      cursor: default;
-    }
-    select[multiple] option:checked {
-      background-color: #3399ff; /* seçilen mavi arka plan */
-      color: white;
-    }
-    label {
-      font-weight: 600;
-    }
-    /* Konteyner */
-    .container {
-      background: rgba(0,0,0,0.55);
-      padding: 30px 40px;
-      border-radius: 15px;
-      max-width: 420px;
-      width: 100%;
-      box-shadow: 0 0 15px rgba(0,0,0,0.6);
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Filtreleme Sistemi</title>
+<style>
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: url('https://images.pexels.com/photos/7919/pexels-photo.jpg?auto=compress&cs=tinysrgb&h=750&w=1260') no-repeat center center fixed;
+    background-size: cover;
+    color: white;
+    padding: 40px;
+  }
+  .container {
+    background: rgba(0,0,0,0.6);
+    padding: 30px;
+    border-radius: 15px;
+    max-width: 450px;
+    margin: auto;
+    box-shadow: 0 0 15px rgba(0,0,0,0.8);
+  }
+  label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+  }
+  select {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 30px;
+    border-radius: 6px;
+    border: none;
+    background: #222;
+    color: white;
+    font-size: 1rem;
+    outline: none;
+    cursor: pointer;
+  }
+  select[multiple] {
+    height: 140px;
+    cursor: default;
+  }
+  select[multiple] option:checked {
+    background-color: #3399ff;
+  }
+  h2 {
+    margin-bottom: 10px;
+  }
+</style>
 </head>
 <body>
-  <div class="container">
-    <h2>1. Kategori Seç</h2>
-    <label for="category">Kategori:</label>
-    <select id="category" onchange="resetFilters(); showBrands();">
-      <option value="">Seçin</option>
-      <option value="araba">Araba</option>
-      <option value="gayrimenkul">Gayrimenkul</option>
-    </select>
+<div class="container">
 
-    <h2 id="brandTitle">2. Marka Seç</h2>
-    <label for="brand">Marka:</label>
-    <select id="brand" onchange="showModels()">
-      <option value="">Önce kategori seçin</option>
-    </select>
+  <h2>1. Kategori Seç</h2>
+  <label for="category">Kategori:</label>
+  <select id="category">
+    <option value="">Seçin</option>
+    <option value="araba">Araba</option>
+    <option value="gayrimenkul">Gayrimenkul</option>
+  </select>
 
-    <h2 id="modelTitle" style="display:none;">3. Model Seç</h2>
-    <label for="model" id="modelLabel" style="display:none;">Model:</label>
-    <select id="model" onchange="showPackages()" style="display:none;">
-      <option value="">Önce marka seçin</option>
-    </select>
+  <h2 id="brandTitle" style="display:none;">2. Marka Seç</h2>
+  <label for="brand" id="brandLabel" style="display:none;">Marka / Varlık Türü:</label>
+  <select id="brand" style="display:none;"></select>
 
-    <h2 id="packageTitle" style="display:none;">4. Paket Seç</h2>
-    <label for="package" id="packageLabel" style="display:none;">Paket:</label>
-    <select id="package" style="display:none;">
-      <option value="">Önce model seçin</option>
-    </select>
+  <h2 id="modelTitle" style="display:none;">3. Model Seç</h2>
+  <label for="model" id="modelLabel" style="display:none;">Model:</label>
+  <select id="model" style="display:none;"></select>
 
-    <h2 id="cityTitle" style="display:none;">5. İller Seç</h2>
-    <label for="cities" id="cityLabel" style="display:none;">İller:</label>
-    <select id="cities" multiple style="display:none;">
-      <!-- 81 il burada JS ile ekleniyor -->
-    </select>
-  </div>
+  <h2 id="packageTitle" style="display:none;">4. Paket Seç</h2>
+  <label for="package" id="packageLabel" style="display:none;">Paket / Durum:</label>
+  <select id="package" style="display:none;"></select>
 
-  <script>
-    // Tüm veriler burada
-    const data = {
-      araba: {
-        toyota: {
-          yaris: ["Basic", "Sport", "Premium"],
-          corolla: ["Eco", "Luxury", "Sport", "Hybrid"],
-          hilux: ["Standard", "4x4", "Off-Road"]
-        },
-        bmw: {
-          x1: ["Standard", "M Sport", "Premium"],
-          x2: ["Standard", "M Sport"],
-          x7: ["Luxury", "Executive"],
-          i5: ["Standard", "Electric Premium"],
-          i7: ["Electric Luxury"]
-        },
-        mercedes: {
-          c180amg: ["Standard", "AMG Line"],
-          e250: ["Standard", "Exclusive", "AMG"],
-          a250amg: ["Standard", "AMG Line"]
-        }
+  <h2 id="cityTitle" style="display:none;">5. İlleri Seç</h2>
+  <label for="cities" id="cityLabel" style="display:none;">İller:</label>
+  <select id="cities" multiple style="display:none;"></select>
+
+  <h2 id="districtsTitle" style="display:none;">6. İlçeleri Seç</h2>
+  <label for="districts" id="districtsLabel" style="display:none;">İlçeler:</label>
+  <select id="districts" multiple style="display:none;"></select>
+
+</div>
+
+<script>
+  const data = {
+    araba: {
+      toyota: {
+        yaris: ["Basic", "Sport", "Premium"],
+        corolla: ["Eco", "Luxury", "Sport", "Hybrid"],
+        hilux: ["Standard", "4x4", "Off-Road"]
       },
-      gayrimenkul: {
-        konut: ["Satılık", "Kiralık", "Devren Satılık", "Turistik Günlük Kiralık"],
-        arsa: ["Satılık", "Kiralık", "Kat Karşılığı Satılık"],
-        dukkan: ["Satılık", "Kiralık", "Devren Satılık", "Devren Kiralık"]
+      bmw: {
+        x1: ["Standard", "M Sport", "Premium"],
+        x2: ["Standard", "M Sport"],
+        x7: ["Luxury", "Executive"],
+        i5: ["Standard", "Electric Premium"],
+        i7: ["Electric Luxury"]
+      },
+      mercedes: {
+        c180amg: ["Standard", "AMG Line"],
+        e250: ["Standard", "Exclusive", "AMG"],
+        a250amg: ["Standard", "AMG Line"]
       }
-    };
-
-    // 81 ilin listesi
-    const iller = [
-      "Adana","Adıyaman","Afyonkarahisar","Ağrı","Amasya","Ankara","Antalya","Artvin","Aydın","Balıkesir",
-      "Bilecik","Bingöl","Bitlis","Bolu","Burdur","Bursa","Çanakkale","Çankırı","Çorum","Denizli","Diyarbakır",
-      "Edirne","Elazığ","Erzincan","Erzurum","Eskişehir","Gaziantep","Giresun","Gümüşhane","Hakkari","Hatay",
-      "Isparta","Mersin","İstanbul","İzmir","Kars","Kastamonu","Kayseri","Kırklareli","Kırşehir","Kilis",
-      "Kocaeli","Konya","Kütahya","Malatya","Manisa","Kahramanmaraş","Mardin","Muğla","Muş","Nevşehir",
-      "Niğde","Ordu","Rize","Sakarya","Samsun","Siirt","Sinop","Sivas","Tekirdağ","Tokat","Trabzon",
-      "Tunceli","Şanlıurfa","Uşak","Van","Yozgat","Zonguldak","Aksaray","Bayburt","Karaman","Kırıkkale",
-      "Batman","Şırnak","Bartın","Ardahan","Iğdır","Yalova","Karabük","Kilis","Osmaniye","Düzce"
-    ];
-
-    const categorySelect = document.getElementById("category");
-    const brandSelect = document.getElementById("brand");
-    const modelSelect = document.getElementById("model");
-    const packageSelect = document.getElementById("package");
-    const citySelect = document.getElementById("cities");
-
-    const brandTitle = document.getElementById("brandTitle");
-    const modelTitle = document.getElementById("modelTitle");
-    const modelLabel = document.getElementById("modelLabel");
-    const packageTitle = document.getElementById("packageTitle");
-    const packageLabel = document.getElementById("packageLabel");
-    const cityTitle = document.getElementById("cityTitle");
-    const cityLabel = document.getElementById("cityLabel");
-
-    // İl listesini doldur
-    function loadCities(){
-      citySelect.innerHTML = "";
-      iller.forEach(il => {
-        const option = document.createElement("option");
-        option.value = il.toLowerCase();
-        option.textContent = il;
-        citySelect.appendChild(option);
-      });
+    },
+    gayrimenkul: {
+      konut: ["Satılık", "Kiralık", "Devren Satılık", "Turistik Günlük Kiralık"],
+      arsa: ["Satılık", "Kiralık", "Kat Karşılığı Satılık"],
+      dukkan: ["Satılık", "Kiralık", "Devren Satılık", "Devren Kiralık"]
     }
+  };
 
-    function resetFilters() {
-      // Marka, model, paket, iller sıfırla
-      brandSelect.innerHTML = "<option value=''>Önce kategori seçin</option>";
-      modelSelect.innerHTML = "<option value=''>Önce marka seçin</option>";
-      packageSelect.innerHTML = "<option value=''>Önce model seçin</option>";
-      citySelect.innerHTML = "";
-      
-      modelSelect.style.display = "none";
-      modelLabel.style.display = "none";
-      modelTitle.style.display = "none";
+  const iller = [
+    { name: "Adana", districts: ["Seyhan", "Çukurova", "Yüreğir"] },
+    { name: "Ankara", districts: ["Çankaya", "Keçiören", "Mamak"] },
+    { name: "İstanbul", districts: ["Kadıköy", "Beşiktaş", "Üsküdar"] },
+    { name: "İzmir", districts: ["Konak", "Bornova", "Karşıyaka"] },
+    { name: "Antalya", districts: ["Muratpaşa", "Kepez", "Alanya"] }
+  ];
 
-      packageSelect.style.display = "none";
-      packageLabel.style.display = "none";
-      packageTitle.style.display = "none";
+  // Elements
+  const categorySelect = document.getElementById("category");
+  const brandSelect = document.getElementById("brand");
+  const modelSelect = document.getElementById("model");
+  const packageSelect = document.getElementById("package");
+  const citySelect = document.getElementById("cities");
+  const districtSelect = document.getElementById("districts");
 
-      citySelect.style.display = "none";
-      cityLabel.style.display = "none";
-      cityTitle.style.display = "none";
-    }
+  const brandTitle = document.getElementById("brandTitle");
+  const brandLabel = document.getElementById("brandLabel");
+  const modelTitle = document.getElementById("modelTitle");
+  const modelLabel = document.getElementById("modelLabel");
+  const packageTitle = document.getElementById("packageTitle");
+  const packageLabel = document.getElementById("packageLabel");
+  const cityTitle = document.getElementById("cityTitle");
+  const cityLabel = document.getElementById("cityLabel");
+  const districtsTitle = document.getElementById("districtsTitle");
+  const districtsLabel = document.getElementById("districtsLabel");
 
-    function showBrands() {
-      resetFilters();
+  // Yardımcı: Kelime ilk harf büyük yapar
+  function capitalizeWords(str) {
+    return str.replace(/(^|\s|-)\S/g, l => l.toUpperCase());
+  }
 
-      const category = categorySelect.value;
+  // Tüm alt seçimleri gizle ve temizle
+  function resetFrom(level) {
+    switch(level) {
+      case 'category':
+        brandSelect.style.display = "none";
+        brandLabel.style.display = "none";
+        brandTitle.style.display = "none";
+        brandSelect.innerHTML = "";
 
-      if (!category) {
-        brandSelect.innerHTML = "<option value=''>Seçin</option>";
-        return;
-      }
-
-      if (category === "araba") {
-        brandTitle.textContent = "2. Marka Seç";
-        brandSelect.innerHTML = "<option value=''>Seçin</option>";
-        Object.keys(data.araba).forEach(brand => {
-          const option = document.createElement("option");
-          option.value = brand;
-          option.textContent = capitalizeWords(brand);
-          brandSelect.appendChild(option);
-        });
-        brandSelect.disabled = false;
-      } else if (category === "gayrimenkul") {
-        brandTitle.textContent = "2. Varlık Türü Seç";
-        brandSelect.innerHTML = "<option value=''>Seçin</option>";
-        Object.keys(data.gayrimenkul).forEach(vt => {
-          const option = document.createElement("option");
-          option.value = vt;
-          option.textContent = capitalizeWords(vt);
-          brandSelect.appendChild(option);
-        });
-        brandSelect.disabled = false;
-      }
-
-      modelSelect.style.display = "none";
-      modelLabel.style.display = "none";
-      modelTitle.style.display = "none";
-
-      packageSelect.style.display = "none";
-      packageLabel.style.display = "none";
-      packageTitle.style.display = "none";
-
-      citySelect.style.display = "none";
-      cityLabel.style.display = "none";
-      cityTitle.style.display = "none";
-    }
-
-    function showModels() {
-      const category = categorySelect.value;
-      const brand = brandSelect.value;
-
-      modelSelect.innerHTML = "";
-      packageSelect.innerHTML = "";
-      citySelect.innerHTML = "";
-
-      if (!brand) {
+        // no break; aşağıdakileri de temizle
+      case 'brand':
         modelSelect.style.display = "none";
         modelLabel.style.display = "none";
         modelTitle.style.display = "none";
+        modelSelect.innerHTML = "";
 
+      case 'model':
         packageSelect.style.display = "none";
         packageLabel.style.display = "none";
         packageTitle.style.display = "none";
+        packageSelect.innerHTML = "";
 
+      case 'package':
         citySelect.style.display = "none";
         cityLabel.style.display = "none";
         cityTitle.style.display = "none";
+        citySelect.innerHTML = "";
 
-        return;
+      case 'city':
+        districtSelect.style.display = "none";
+        districtsLabel.style.display = "none";
+        districtsTitle.style.display = "none";
+        districtSelect.innerHTML = "";
+        break;
+    }
+  }
+
+  categorySelect.addEventListener("change", () => {
+    resetFrom('category');
+    const cat = categorySelect.value;
+    if (!cat) return;
+
+    // Marka/Varlık türü alanını göster ve doldur
+    brandTitle.style.display = "block";
+    brandLabel.style.display = "block";
+    brandSelect.style.display = "block";
+    brandSelect.innerHTML = "<option value=''>Seçin</option>";
+
+    if(cat === 'araba'){
+      for(let brand in data.araba){
+        let opt = document.createElement("option");
+        opt.value = brand;
+        opt.textContent = capitalizeWords(brand);
+        brandSelect.appendChild(opt);
       }
+    } else if(cat === 'gayrimenkul'){
+      for(let vt in data.gayrimenkul){
+        let opt = document.createElement("option");
+        opt.value = vt;
+        opt.textContent = capitalizeWords(vt);
+        brandSelect.appendChild(opt);
+      }
+    }
+  });
 
-      if (category === "araba") {
-        modelTitle.textContent = "3. Model Seç";
-        modelLabel.textContent = "Model:";
-        modelSelect.style.display = "block";
-        modelLabel.style.display = "inline";
+  brandSelect.addEventListener("change", () => {
+    resetFrom('brand');
+    const cat = categorySelect.value;
+    const brand = brandSelect.value;
+    if(!brand) return;
+
+    if(cat === 'araba'){
+      // Araba için model seçeneği var
+      let models = Object.keys(data.araba[brand]);
+      if(models.length > 0){
         modelTitle.style.display = "block";
-
-        const models = Object.keys(data.araba[brand]);
+        modelLabel.style.display = "block";
+        modelSelect.style.display = "block";
         modelSelect.innerHTML = "<option value=''>Seçin</option>";
-        models.forEach(model => {
-          const option = document.createElement("option");
-          option.value = model;
-          option.textContent = capitalizeWords(model);
-          modelSelect.appendChild(option);
+
+        models.forEach(m => {
+          let opt = document.createElement("option");
+          opt.value = m;
+          opt.textContent = capitalizeWords(m);
+          modelSelect.appendChild(opt);
         });
-
-        packageSelect.style.display = "none";
-        packageLabel.style.display = "none";
-        packageTitle.style.display = "none";
-
-        citySelect.style.display = "none";
-        cityLabel.style.display = "none";
-        cityTitle.style.display = "none";
-      } else if (category === "gayrimenkul") {
-        // Gayrimenkulde model yerine paket (4. filtre) direkt gösterilecek
-        modelSelect.style.display = "none";
-        modelLabel.style.display = "none";
-        modelTitle.style.display = "none";
-
-        packageTitle.textContent = "3. Durum Seç";
-        packageLabel.textContent = "Durum:";
-        packageSelect.style.display = "block";
-        packageLabel.style.display = "inline";
-        packageTitle.style.display = "block";
-
-        const paketler = data.gayrimenkul[brand];
-        packageSelect.innerHTML = "<option value=''>Seçin</option>";
-        paketler.forEach(paket => {
-          const option = document.createElement("option");
-          option.value = paket.toLowerCase().replace(/ /g,"_");
-          option.textContent = paket;
-          packageSelect.appendChild(option);
-        });
-
-        citySelect.style.display = "none";
-        cityLabel.style.display = "none";
-        cityTitle.style.display = "none";
       }
     }
+    else if(cat === 'gayrimenkul'){
+      // Gayrimenkulde model aşaması yok, paket doğrudan
+      packageTitle.style.display = "block";
+      packageLabel.style.display = "block";
+      packageSelect.style.display = "block";
+      packageSelect.innerHTML = "<option value=''>Seçin</option>";
 
-    function showPackages() {
-      const category = categorySelect.value;
-      const brand = brandSelect.value;
-      const model = modelSelect.value;
-
-      packageSelect.innerHTML = "";
-      citySelect.innerHTML = "";
-
-      if (!model) {
-        packageSelect.style.display = "none";
-        packageLabel.style.display = "none";
-        packageTitle.style.display = "none";
-
-        citySelect.style.display = "none";
-        cityLabel.style.display = "none";
-        cityTitle.style.display = "none";
-
-        return;
-      }
-
-      if (category === "araba") {
-        packageTitle.textContent = "4. Paket Seç";
-        packageLabel.textContent = "Paket:";
-        packageSelect.style.display = "block";
-        packageLabel.style.display = "inline";
-        packageTitle.style.display = "block";
-
-        const paketler = data.araba[brand][model];
-        packageSelect.innerHTML = "<option value=''>Seçin</option>";
-        paketler.forEach(paket => {
-          const option = document.createElement("option");
-          option.value = paket.toLowerCase().replace(/ /g,"_");
-          option.textContent = paket;
-          packageSelect.appendChild(option);
-        });
-
-        citySelect.style.display = "none";
-        cityLabel.style.display = "none";
-        cityTitle.style.display = "none";
-      }
-    }
-
-    // İl filtresi hep son adım olarak gösterilecek
-    function showCities() {
-      cityTitle.style.display = "block";
-      cityLabel.style.display = "inline";
-      citySelect.style.display = "block";
-      loadCities();
-    }
-
-    // Kategori, marka, model veya paket değiştiğinde iller görünür hale gelsin
-    [brandSelect, modelSelect, packageSelect].forEach(el => {
-      el.addEventListener('change', () => {
-        if (categorySelect.value === 'araba') {
-          if (brandSelect.value && modelSelect.value && packageSelect.value) {
-            showCities();
-          } else {
-            citySelect.style.display = "none";
-            cityLabel.style.display = "none";
-            cityTitle.style.display = "none";
-          }
-        } else if (categorySelect.value === 'gayrimenkul') {
-          if (brandSelect.value && packageSelect.value) {
-            showCities();
-          } else {
-            citySelect.style.display = "none";
-            cityLabel.style.display = "none";
-            cityTitle.style.display = "none";
-          }
-        }
+      data.gayrimenkul[brand].forEach(paket => {
+        let opt = document.createElement("option");
+        opt.value = paket.toLowerCase().replace(/ /g,"_");
+        opt.textContent = paket;
+        packageSelect.appendChild(opt);
       });
+    }
+  });
+
+  modelSelect.addEventListener("change", () => {
+    resetFrom('model');
+    const cat = categorySelect.value;
+    const brand = brandSelect.value;
+    const model = modelSelect.value;
+    if(!model) return;
+
+    if(cat === 'araba'){
+      const paketler = data.araba[brand][model];
+      if(paketler.length > 0){
+        packageTitle.style.display = "block";
+        packageLabel.style.display = "block";
+        packageSelect.style.display = "block";
+        packageSelect.innerHTML = "<option value=''>Seçin</option>";
+        paketler.forEach(paket => {
+          let opt = document.createElement("option");
+          opt.value = paket.toLowerCase().replace(/ /g,"_");
+          opt.textContent = paket;
+          packageSelect.appendChild(opt);
+        });
+      }
+    }
+  });
+
+  packageSelect.addEventListener("change", () => {
+    resetFrom('package');
+    const paket = packageSelect.value;
+    if(!paket) return;
+
+    cityTitle.style.display = "block";
+    cityLabel.style.display = "block";
+    citySelect.style.display = "block";
+    citySelect.innerHTML = "";
+
+    iller.forEach(il => {
+      let opt = document.createElement("option");
+      opt.value = il.name;
+      opt.textContent = il.name;
+      citySelect.appendChild(opt);
+    });
+  });
+
+  citySelect.addEventListener("change", () => {
+    resetFrom('city');
+    const secilenIller = Array.from(citySelect.selectedOptions).map(o => o.value);
+    if(secilenIller.length === 0) return;
+
+    let tumIlceler = [];
+    iller.forEach(il => {
+      if(secilenIller.includes(il.name)){
+        tumIlceler = tumIlceler.concat(il.districts);
+      }
     });
 
-    // Küçük yardımcı fonksiyon: ilk harfi büyük yapar
-    function capitalizeWords(str) {
-      return str.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
-    }
+    // İlçeleri benzersiz yap (unique)
+    tumIlceler = [...new Set(tumIlceler)];
 
-  </script>
+    districtsTitle.style.display = "block";
+    districtsLabel.style.display = "block";
+    districtSelect.style.display = "block";
+    districtSelect.innerHTML = "";
+
+    tumIlceler.forEach(ilce => {
+      let opt = document.createElement("option");
+      opt.value = ilce;
+      opt.textContent = ilce;
+      districtSelect.appendChild(opt);
+    });
+  });
+</script>
 </body>
 </html>
